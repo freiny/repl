@@ -1,5 +1,7 @@
 console.log('************************************************');
+var _ = require('underscore');
 
-for (var i=0; i<4; i++) {
-	console.log('hello');
-}
+var a = [1,2,3];
+_.each(a, function(each){
+	console.log(each);
+});

@@ -10,4 +10,4 @@ docker rm "$imagePrefix"_sv_1
 # Remove Images
 docker rmi "$imagePrefix"_sv:latest
 
-rm -rf ./src/node_modules
+rm -rf ./node_modules

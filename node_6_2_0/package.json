@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "author": "First Last <first.last@example.com>",
-  "main": "runner.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node /src/runner.js"
+    "start": "node /src/main.js"
   },
   "dependencies": {
 		"express": "^4.13.3",

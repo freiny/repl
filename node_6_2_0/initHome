@@ -1,4 +1,6 @@
 #!/bin/sh
+cd /src
+npm install
 echo '*****************************************'
 node /src/main.js
 while inotifywait --quiet -e modify /src --recursive --exclude "npm-debug.log"; do

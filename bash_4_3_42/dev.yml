@@ -1,0 +1,8 @@
+version: '2'
+services:
+  sv:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ../bash_4_3_42:/src

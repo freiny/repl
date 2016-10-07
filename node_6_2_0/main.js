@@ -1,7 +1,5 @@
-console.log('************************************************');
-var _ = require('underscore');
+'use strict';
 
-var a = [1,2,3];
-_.each(a, function(each){
-	console.log(each);
-});
+console.log('************************************************');
+
+console.log('hello');

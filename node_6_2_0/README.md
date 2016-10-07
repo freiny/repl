@@ -1,5 +1,3 @@
-# es5-notes
-
 ## Setup
 $ chmod 744 init
 $ chmod 744 clean

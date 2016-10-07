@@ -1,0 +1,11 @@
+#!/bin/sh
+imagePrefix=sh
+
+# Stop Containers
+docker stop "$imagePrefix"_sv_1
+
+# Remove Containers
+docker rm "$imagePrefix"_sv_1
+
+# Remove Images
+docker rmi "$imagePrefix"_sv:latest

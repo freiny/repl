@@ -1,0 +1,6 @@
+#!/bin/sh
+cd /src
+source main
+while inotifywait --quiet -e modify /src --recursive; do
+	source main
+done

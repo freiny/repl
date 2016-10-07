@@ -1,0 +1,9 @@
+#!/bin/sh
+rm /src/main
+go build -o /src/main
+/src/main
+while inotifywait --quiet -e modify /src --recursive; do
+	rm /src/main
+	go build -o /src/main
+	/src/main
+done

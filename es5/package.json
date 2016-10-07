@@ -1,0 +1,12 @@
+{
+  "name": "docker_app",
+  "version": "0.0.0",
+  "description": "",
+  "author": "First Last <first.last@example.com>",
+  "main": "runner.js",
+  "scripts": {
+    "start": "node /src/runner.js"
+  },
+  "dependencies": {
+  }
+}

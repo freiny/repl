@@ -1,5 +1,5 @@
 #!/bin/sh
-imagePrefix=es5
+imagePrefix=node
 
 # Stop Containers
 docker stop "$imagePrefix"_sv_1

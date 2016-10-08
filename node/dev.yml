@@ -5,4 +5,4 @@ services:
       context: ./
       dockerfile: dev.Dockerfile
     volumes:
-      - ../es5:/src
+      - ../node:/src

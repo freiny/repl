@@ -1,0 +1,14 @@
+#!/bin/sh
+imagePrefix=mariadb10117
+
+# Stop Containers
+docker stop "$imagePrefix"_db_1
+
+# Remove Containers
+docker rm "$imagePrefix"_db_1
+
+# Remove Images
+docker rmi "$imagePrefix"_db:latest
+
+rm -rf lib log bak
+mkdir lib log bak

@@ -1,8 +1,11 @@
 #!/bin/sh
+printf "\033c"; echo "************************************************"
+cd /src
 rm /src/main
 go build -o /src/main
 /src/main
 while inotifywait --quiet -e modify /src --recursive; do
+	printf "\033c"; echo "************************************************"
 	rm /src/main
 	go build -o /src/main
 	/src/main

@@ -1,28 +1,17 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
-
-	un "github.com/tobyhede/go-underscore"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-
-	var Each func(func(value interface{}, i interface{}), interface{})
-
-	var buffer bytes.Buffer
-
-	fn := func(s, i interface{}) {
-		buffer.WriteString(s.(string))
-	}
-
-	s := []string{"a", "b", "c", "d", "e"}
-	Each(fn, s)
-
-	expect := "abcde"
-
-	e := un.Each(fn, s)
-
-	fmt.Printf("%#v\n", e) //"abcde"
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run() // listen and server on 0.0.0.0:8080
 }
+
+// $ curl localhost:8080/ping

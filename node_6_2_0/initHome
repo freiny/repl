@@ -1,8 +1,10 @@
 #!/bin/sh
+mv node_modules /src
 cd /src
 npm install
-echo '*****************************************'
+printf "\033c"; echo "************************************************"
 node /src/main.js
 while inotifywait --quiet -e modify /src --recursive --exclude "npm-debug.log"; do
+	printf "\033c"; echo "************************************************"
 	node /src/main.js
 done

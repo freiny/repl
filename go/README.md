@@ -1,9 +1,11 @@
 ## Setup
-$ chmod 744 init
-$ chmod 744 clean
+$ chmod 744 run
 
-## Run Project
-./init
+## Build & Save image as gzip compressed file
+./run init
 
-## Clean Project
-./clean
+## Load & Run gzip compressed image file
+./run load
+
+## Clean docker container and images
+./run clean

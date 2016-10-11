@@ -1,3 +1,0 @@
-#!/bin/sh
-source ./clean
-docker-compose --file dev.yml up

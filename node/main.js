@@ -1,2 +1,2 @@
-"use strict";console.log('************************************************');
+"use strict";
 console.log('hello');

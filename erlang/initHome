@@ -1,0 +1,12 @@
+#!/bin/sh
+rm /src/main.beam
+erlc /src/main.erl
+printf "\033c"; echo "************************************************"
+erl -noshell -pa /src -s main init -s init stop
+while inotifywait --quiet -e modify /src --recursive --exclude "erl_crash.dump"; do
+	# killall -9 erl
+	rm /src/main.beam
+	erlc /src/main.erl
+	printf "\033c"; echo "************************************************"
+	erl -noshell -pa /src -s main init -s init stop
+done

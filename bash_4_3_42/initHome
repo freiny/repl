@@ -1,6 +1,8 @@
 #!/bin/sh
+printf "\033c"; echo "************************************************"
 cd /src
 source main
 while inotifywait --quiet -e modify /src --recursive; do
+	printf "\033c"; echo "************************************************"
 	source main
 done

@@ -1,6 +1,12 @@
 #!/bin/bash
 imagePrefix=bash4342
 imageId=sv
+
+up(){
+	echo "UP"
+	docker-compose -f ./dev.yml up
+}
+
 clean(){
 	echo "CLEAN"
 	# Stop and Remove Containers, Remove Images
@@ -13,13 +19,13 @@ save(){
 	echo "SAVE"
 	rm "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
 	docker-compose --file dev.yml build
-	docker save $imagePrefix"_"$imageId | gzip -9 >  "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+	docker save $imagePrefix"_"$imageId | gzip -1 >  "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
 }
 
 load(){
 	echo "LOAD"
-	gzcat "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz" | docker load
-	docker-compose -f ./dev.yml up
+	docker load < "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+	up
 }
 
 init(){
@@ -39,6 +45,12 @@ case $1 in
 	;;
 	load)
 		load
+	;;
+	save)
+		save
+	;;
+	up)
+		up
 	;;
   # ---------------------------------------------------
   *|"")    echo "Run Utility: run <Command> [Arguments...]"

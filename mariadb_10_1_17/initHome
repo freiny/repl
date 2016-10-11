@@ -4,8 +4,10 @@ mysql_install_db --user=mysql
 cd '/usr' ;
 /usr/bin/mysqld_safe --datadir='/var/lib/mysql' &
 
+printf "\033c"; echo "************************************************"
 sleep 2 && cd /src && source main
 while inotifywait --quiet -e modify /src --recursive; do
+	printf "\033c"; echo "************************************************"
 	cd /src
 	source main
 done

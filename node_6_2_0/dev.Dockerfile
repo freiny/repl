@@ -7,4 +7,7 @@ apk add inotify-tools
 ADD package.json /
 RUN npm install
 
+ENV HTTP_PORT 8080
+EXPOSE 8080
+
 CMD ["sh", "-c", "source /src/initHome"]

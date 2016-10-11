@@ -1,0 +1,14 @@
+#!/bin/sh
+go get github.com/gin-gonic/gin
+cd /src
+rm /src/main
+go build -o /src/main
+printf "\033c"; echo "************************************************"
+/src/main &
+while inotifywait --quiet -e modify /src --recursive; do
+	killall -9 main
+	rm /src/main
+	go build -o /src/main
+	printf "\033c"; echo "************************************************"
+	/src/main &
+done

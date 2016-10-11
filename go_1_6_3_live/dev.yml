@@ -1,0 +1,10 @@
+version: '2'
+services:
+  sv:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ../go_1_6_3_live:/src
+    ports:
+      - 8080:8080

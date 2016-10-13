@@ -1,4 +1,27 @@
 #!/bin/sh
-printf "\033c"
-echo "************************************************"
-mysql test < main.sql
+printf "\033c"; echo "************************************************"
+
+if [ -f "/src/_init.sql" ]; then
+	echo "[RUNNING DEFAULT SQL FILE]"
+	mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+else
+	echo "[RUNNING INIT SQL FILE]"
+	# create _init.sql file
+	touch "_init.sql"
+	echo "CREATE DATABASE mydb;" >> _init.sql
+	echo "USE mydb;" >> _init.sql
+	echo "DROP DATABASE test;" >> _init.sql
+	echo "update mysql.user set Password=PASSWORD('$MYSQL_USER_PASSWORD') where User='$MYSQL_USER_NAME';" >> _init.sql
+	echo "FLUSH PRIVILEGES;" >> _init.sql
+
+	mysql test < _init.sql
+	mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+fi
+
+# mariadbnode #0.2.6
+# mysqld_safe --help
+# mysql mysql < main.sql
+# mysql --help
+#
+# mysqldump -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD" database_name' > database_name_dump.sql
+# mysqldump --help

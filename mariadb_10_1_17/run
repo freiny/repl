@@ -4,7 +4,7 @@ imageId=db
 
 up(){
 	echo "UP"
-	docker-compose -f ./dev.yml up
+	docker-compose -f ./_dev.yml up
 }
 
 clean(){
@@ -13,14 +13,14 @@ clean(){
 	docker stop "$imagePrefix"_"$imageId"_1
 	docker rm "$imagePrefix"_"$imageId"_1
 	docker rmi "$imagePrefix"_"$imageId":latest
-	rm -rf lib log bak
+	rm -rf lib log bak _init.sql
 	mkdir lib log bak
 }
 
 save(){
 	echo "SAVE"
 	rm "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
-	docker-compose --file dev.yml build
+	docker-compose --file _dev.yml build
 	docker save $imagePrefix"_"$imageId | gzip -1 >  "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
 }
 
@@ -32,6 +32,31 @@ load(){
 
 init(){
 	echo "INIT"
+
+	if [ -f "/src/_dev.yml" ]; then
+		echo "[RUNNING DEFAULT PROCESS]"
+		mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+	else
+		echo "[RUNNING INIT PROCESS]"
+		# generate docker-compose yml file to pass secrets with environment variables
+		rm _dev.yml
+		touch _dev.yml
+		echo "version: '2'"	>> _dev.yml
+		echo "services:" >> _dev.yml
+		echo "  db:" >> _dev.yml
+		echo "    build:" >> _dev.yml
+		echo "      context: ./" >> _dev.yml
+		echo "      dockerfile: dev.Dockerfile" >> _dev.yml
+		echo "    volumes:" >> _dev.yml
+		echo "      - ../mariadb_10_1_17:/src" >> _dev.yml
+		echo "      - ../mariadb_10_1_17/lib:/var/lib/mysql" >> _dev.yml
+		echo "      - ../mariadb_10_1_17/log:/var/log/mysql" >> _dev.yml
+		echo "      - ../mariadb_10_1_17/bak:/var/backups/mysql" >> _dev.yml
+		echo "    environment:" >> _dev.yml
+		echo "      - MYSQL_USER_NAME=$MYSQL_USER_NAME" >> _dev.yml
+		echo "      - MYSQL_USER_PASSWORD=$MYSQL_USER_PASSWORD" >> _dev.yml
+	fi
+
 	clean
 	save
 	clean

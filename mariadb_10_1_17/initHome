@@ -6,7 +6,7 @@ cd '/usr' ;
 
 printf "\033c"; echo "************************************************"
 sleep 2 && cd /src && source main
-while inotifywait --quiet -e modify /src --recursive; do
+while inotifywait --quiet -e modify /src --recursive --exclude "/src/lib"; do
 	printf "\033c"; echo "************************************************"
 	cd /src
 	source main

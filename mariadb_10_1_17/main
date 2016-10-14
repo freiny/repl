@@ -1,8 +1,10 @@
 #!/bin/sh
-printf "\033c"; echo "************************************************"
 
 if [ -f "/src/_init.sql" ]; then
 	echo "[RUNNING DEFAULT SQL FILE]"
+	# Drop all tables in database
+	mysqldump -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" --add-drop-table --no-data mydb | grep ^DROP | mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb
+	printf "\033c"; echo "************************************************"
 	mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
 else
 	echo "[RUNNING INIT SQL FILE]"
@@ -15,13 +17,8 @@ else
 	echo "FLUSH PRIVILEGES;" >> _init.sql
 
 	mysql test < _init.sql
+	# Drop all tables in database
+	mysqldump -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" --add-drop-table --no-data mydb | grep ^DROP | mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb
+	printf "\033c"; echo "************************************************"
 	mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
 fi
-
-# mariadbnode #0.2.6
-# mysqld_safe --help
-# mysql mysql < main.sql
-# mysql --help
-#
-# mysqldump -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD" database_name' > database_name_dump.sql
-# mysqldump --help

@@ -23,7 +23,7 @@ Session.vim
 Thumbs.db
 \#*\#
 auto-save-list
-log
+.*log*
 logs
 temp
 tmp
@@ -32,3 +32,10 @@ tramp
 # Node.js
 .npm
 node_modules
+
+# Generated Files
+_dev.yml
+_init.sql
+
+# Database
+# lib

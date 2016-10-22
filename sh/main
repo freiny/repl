@@ -1,32 +1,4 @@
 #!/bin/sh
 
-rm -rf testFolder
-mkdir testFolder
-cd testFolder
-
-touch fileA
-echo "2" >> fileA
-echo "c" >> fileA
-echo "a" >> fileA
-echo "3" >> fileA
-echo "d" >> fileA
-echo "0" >> fileA
-echo "b" >> fileA
-echo "1" >> fileA
-
-sort fileA
-# OUTPUT:
-# 0
-# 1
-# 2
-# 3
-# a
-# b
-# c
-# d
-
-echo "************"
-sort -n fileA
-
-echo "************"
-sort -r fileA
+ls -C /etc
+cat /etc/conf.d

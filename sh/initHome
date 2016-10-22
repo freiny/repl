@@ -1,8 +1,11 @@
 #!/bin/sh
 printf "\033c"; echo "************************************************"
 cd /src
- sh -c "source /src/main"
+touch main
+chmod 744 main
+sh -c "/src/main"
 while inotifywait --quiet -e modify /src --recursive; do
+	killall -9 main
 	printf "\033c"; echo "************************************************"
-	sh -c "source /src/main"
+	sh -c "/src/main"
 done

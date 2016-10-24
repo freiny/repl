@@ -2,9 +2,31 @@
 imagePrefix=mariadb10117
 imageId=db
 
+generate(){
+	# generate docker-compose yml file to pass secrets with environment variables
+	rm dev.gen.yml
+	touch dev.gen.yml
+
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+		tline="$(echo -e "${line}" | tr -d '[[:space:]]')"
+		first="${tline:0:1}"
+		last="${tline:$((${#tline}-1)):1}"
+
+		if [ "$first" = "-" ] && [ "$last" = "=" ]; then
+			eVar="$""${tline:1:$((${#tline}-2))}"
+			echo "$line"$(eval echo $eVar) >> dev.gen.yml
+		else
+			echo "$line" >> dev.gen.yml
+		fi
+	done < "dev.tpl.yml"
+	# echo "------------------------------------------------ dev.gen.yml" && \
+	# cat dev.gen.yml && \
+	# echo "------------------------------------------------"
+}
+
 up(){
 	echo "UP"
-	docker-compose -f ./_dev.yml up
+	docker-compose -f ./dev.gen.yml up
 }
 
 clean(){
@@ -13,14 +35,14 @@ clean(){
 	docker stop "$imagePrefix"_"$imageId"_1
 	docker rm "$imagePrefix"_"$imageId"_1
 	docker rmi "$imagePrefix"_"$imageId":latest
-	rm -rf lib log bak _init.sql
-	mkdir lib log bak
+	rm -rf lib.gen log.gen bak.gen init.gen.sql
+	mkdir lib.gen log.gen bak.gen
 }
 
 save(){
 	echo "SAVE"
 	rm "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
-	docker-compose --file _dev.yml build
+	docker-compose --file dev.gen.yml build
 	docker save $imagePrefix"_"$imageId | gzip -1 >  "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
 }
 
@@ -33,28 +55,12 @@ load(){
 init(){
 	echo "INIT"
 
-	if [ -f "/src/_dev.yml" ]; then
+	if [ -f "/src/dev.gen.yml" ]; then
 		echo "[RUNNING DEFAULT PROCESS]"
 		mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
 	else
 		echo "[RUNNING INIT PROCESS]"
-		# generate docker-compose yml file to pass secrets with environment variables
-		rm _dev.yml
-		touch _dev.yml
-		echo "version: '2'"	>> _dev.yml
-		echo "services:" >> _dev.yml
-		echo "  db:" >> _dev.yml
-		echo "    build:" >> _dev.yml
-		echo "      context: ./" >> _dev.yml
-		echo "      dockerfile: dev.Dockerfile" >> _dev.yml
-		echo "    volumes:" >> _dev.yml
-		echo "      - ../mariadb_10_1_17:/src" >> _dev.yml
-		echo "      - ../mariadb_10_1_17/lib:/var/lib/mysql" >> _dev.yml
-		echo "      - ../mariadb_10_1_17/log:/var/log/mysql" >> _dev.yml
-		echo "      - ../mariadb_10_1_17/bak:/var/backups/mysql" >> _dev.yml
-		echo "    environment:" >> _dev.yml
-		echo "      - MYSQL_USER_NAME=$MYSQL_USER_NAME" >> _dev.yml
-		echo "      - MYSQL_USER_PASSWORD=$MYSQL_USER_PASSWORD" >> _dev.yml
+		generate
 	fi
 
 	clean

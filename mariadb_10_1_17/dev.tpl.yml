@@ -1,0 +1,14 @@
+version: '2'
+services:
+  db:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ../mariadb_10_1_17:/src
+      - ../mariadb_10_1_17/lib.gen:/var/lib/mysql
+      - ../mariadb_10_1_17/log.gen:/var/log/mysql
+      - ../mariadb_10_1_17/bak.gen:/var/backups/mysql
+    environment:
+      - MYSQL_USER_NAME=
+      - MYSQL_USER_PASSWORD=

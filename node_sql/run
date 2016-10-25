@@ -1,0 +1,90 @@
+#!/bin/bash
+imagePrefix=nodesql
+imageId=db
+
+generate(){
+	# generate docker-compose yml file to pass secrets with environment variables
+	rm dev.gen.yml
+	touch dev.gen.yml
+
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+		tline="$(echo -e "${line}" | tr -d '[[:space:]]')"
+		first="${tline:0:1}"
+		last="${tline:$((${#tline}-1)):1}"
+
+		if [ "$first" = "-" ] && [ "$last" = "=" ]; then
+			eVar="$""${tline:1:$((${#tline}-2))}"
+			echo "$line"$(eval echo $eVar) >> dev.gen.yml
+		else
+			echo "$line" >> dev.gen.yml
+		fi
+	done < "dev.tpl.yml"
+	# echo "------------------------------------------------ dev.gen.yml" && \
+	# cat dev.gen.yml && \
+	# echo "------------------------------------------------"
+}
+
+up(){
+	echo "UP"
+	docker-compose -f ./dev.gen.yml up
+}
+
+clean(){
+	echo "CLEAN"
+	# Stop and Remove Containers, Remove Images
+	docker stop "$imagePrefix"_"$imageId"_1
+	docker rm "$imagePrefix"_"$imageId"_1
+	docker rmi "$imagePrefix"_"$imageId":latest
+	rm -rf lib.gen log.gen bak.gen init.gen.sql node_modules
+	mkdir lib.gen log.gen bak.gen
+}
+
+save(){
+	echo "SAVE"
+	rm "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+	docker-compose --file dev.gen.yml build
+	docker save $imagePrefix"_"$imageId | gzip -1 >  "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+}
+
+load(){
+	echo "LOAD"
+	docker load < "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+	up
+}
+
+init(){
+	echo "INIT"
+
+	if [ -f "/src/dev.gen.yml" ]; then
+		echo "[RUNNING DEFAULT PROCESS]"
+		mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+	else
+		echo "[RUNNING INIT PROCESS]"
+		generate
+	fi
+
+	clean
+	save
+	clean
+}
+
+case $1 in
+  # ---------------------------------------------------
+	clean)
+		clean
+	;;
+	init)
+		init
+	;;
+	load)
+		load
+	;;
+	save)
+		save
+	;;
+	up)
+		up
+	;;
+  # ---------------------------------------------------
+  *|"")    echo "Run Utility: run <Command> [Arguments...]"
+esac

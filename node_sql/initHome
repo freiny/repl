@@ -1,0 +1,26 @@
+#!/bin/sh
+chmod 744 /src/main
+rm /src/init.gen.sql
+
+mv node_modules /src
+cd /src
+npm install
+
+mysql_install_db --user=mysql
+cd '/usr' ;
+/usr/bin/mysqld_safe --datadir='/var/lib/mysql' &
+
+printf "\033c"; echo "************************************************"
+# node /src/main.js &
+
+# printf "\033c"; echo "************************************************"
+# # sleep 2 && cd /src && source main
+sleep 2 && cd /src && ./main && node /src/main.js &
+
+while inotifywait --quiet -e modify /src --recursive --exclude "/src/lib.gen" --exclude "npm-debug.log"; do
+	# printf "\033c"; echo "************************************************"
+	killall -9 node
+	printf "\033c"; echo "************************************************"
+	cd /src
+	node /src/main.js &
+done

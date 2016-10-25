@@ -1,0 +1,46 @@
+#!/bin/sh
+# if [ -f "/src/init.gen.sql" ]; then
+# 	echo "[RUNNING DEFAULT SQL FILE]"
+# 	# Drop all tables in database
+# 	mysqldump -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" --add-drop-table --no-data mydb | grep ^DROP | mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb
+# 	printf "\033c"; echo "************************************************"
+# 	mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+# else
+# 	echo "[RUNNING INIT SQL FILE]"
+# 	# create init.gen.sql file
+# 	touch "init.gen.sql"
+# 	echo "CREATE DATABASE mydb;" >> init.gen.sql
+# 	echo "USE mydb;" >> init.gen.sql
+# 	echo "DROP DATABASE test;" >> init.gen.sql
+# 	echo "update mysql.user set Password=PASSWORD('$MYSQL_USER_PASSWORD') where User='$MYSQL_USER_NAME';" >> init.gen.sql
+# 	echo "FLUSH PRIVILEGES;" >> init.gen.sql
+#
+# 	mysql test < init.gen.sql
+# 	# Drop all tables in database
+# 	mysqldump -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" --add-drop-table --no-data mydb | grep ^DROP | mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb
+# 	printf "\033c"; echo "************************************************"
+# 	mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+# fi
+
+if [ -f "/src/init.gen.sql" ]; then
+	echo "[RUNNING DEFAULT SQL FILE]"
+	# Drop all tables in database
+	mysqldump -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" --add-drop-table --no-data mydb | grep ^DROP | mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb
+	printf "\033c"; echo "************************************************"
+	# mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+else
+	echo "[RUNNING INIT SQL FILE]"
+	# create init.gen.sql file
+	touch "init.gen.sql"
+	echo "CREATE DATABASE mydb;" >> init.gen.sql
+	echo "USE mydb;" >> init.gen.sql
+	echo "DROP DATABASE test;" >> init.gen.sql
+	echo "update mysql.user set Password=PASSWORD('$MYSQL_USER_PASSWORD') where User='$MYSQL_USER_NAME';" >> init.gen.sql
+	echo "FLUSH PRIVILEGES;" >> init.gen.sql
+
+	mysql test < init.gen.sql
+	# Drop all tables in database
+	mysqldump -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" --add-drop-table --no-data mydb | grep ^DROP | mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb
+	printf "\033c"; echo "************************************************"
+	# mysql -u"$MYSQL_USER_NAME" -p"$MYSQL_USER_PASSWORD" mydb < main.sql
+fi

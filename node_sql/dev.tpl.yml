@@ -1,0 +1,17 @@
+version: '2'
+services:
+  db:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ../node_sql:/src
+      - ../node_sql/lib.gen:/var/lib/mysql
+      - ../node_sql/log.gen:/var/log/mysql
+      - ../node_sql/bak.gen:/var/backups/mysql
+    ports:
+      - 3306:3306
+      - 8080:8080
+    environment:
+      - MYSQL_USER_NAME=
+      - MYSQL_USER_PASSWORD=

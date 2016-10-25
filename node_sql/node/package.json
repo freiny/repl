@@ -1,0 +1,16 @@
+{
+  "name": "docker_app",
+  "version": "0.0.0",
+  "description": "",
+  "author": "First Last <first.last@example.com>",
+  "main": "main.js",
+  "scripts": {
+    "start": "node /src/main.js"
+  },
+  "dependencies": {
+		"express": "^4.13.3",
+		"body-parser": "~1.15.2",
+		"mocha": "^3.1.0",
+		"underscore": "^1.8.3"
+  }
+}

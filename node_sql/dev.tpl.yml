@@ -10,8 +10,12 @@ services:
       - ../node_sql/log.gen:/var/log/mysql
       - ../node_sql/bak.gen:/var/backups/mysql
     ports:
-      - 3306:3306
       - 8080:8080
+      - 3306:3306
     environment:
+      - HTTP_PORT=8080
+      - MYSQL_PORT=3306
+      - MYSQL_HOST=127.0.0.1
+      - MYSQL_DATABASE=mydb
       - MYSQL_USER_NAME=
       - MYSQL_USER_PASSWORD=

@@ -1,23 +1,26 @@
 'use strict';
-console.log('hello asfd');
+const _ = require('underscore');
+var mysql = require('mysql');
 
-const MYSQL_USER_NAME = process.env.MYSQL_USER_NAME;
-const MYSQL_USER_PASSWORD = process.env.MYSQL_USER_PASSWORD;
-
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : '127.0.0.1',
-  user     : 'root',
-  password : 'rootpass',
-	database : 'mydb',
-	port     : '3306'
+var c = mysql.createConnection({
+	port     : process.env.MYSQL_PORT,
+  host     : process.env.MYSQL_HOST,
+	database : process.env.MYSQL_DATABASE,
+  user     : process.env.MYSQL_USER_NAME,
+  password : process.env.MYSQL_USER_PASSWORD
 });
 
-connection.connect(function(err) {
+c.connect(function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
   }
 
-  console.log('connected as id ' + connection.threadId);
+  console.log('connected as id ' + c.threadId);
 });
+
+c.query('SHOW DATABASES;', function(err, results){
+	_.each(results, function(each){
+		console.log(each.Database);
+	});
+})

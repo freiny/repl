@@ -1,17 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title></title>
-<script src="js/vendor/vue/vue.js"></script>
-</head>
-
+<html>
 <body>
-hey
-<script src="js/lib.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+	<div id="app">
+		<div>Name: {{user.name}}</div>
+		<div>Age: {{user.age}}</div>
+		<div>Phone: {{user.phone}}</div>
+	</div>
 </body>
+
+<script src="vue.js"></script>
+<script>
+// ----------------------------------------------------------------
+// bind object to view
+
+var app = new Vue({
+	el: '#app',
+	data: {
+		user: {
+			name: 'Pat',
+			age: '24',
+			phone: '123-456-7890'
+		}
+	}
+});
+
+// ----------------------------------------------------------------
+// dynamically update bound object after 2 second delay
+setTimeout(function(){
+	app.user.name = 'Hello ' + app.user.name;
+}, 2000);
+// ----------------------------------------------------------------
+</script>
 
 </html>

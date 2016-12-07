@@ -1,0 +1,13 @@
+{
+  "name": "repl",
+  "version": "0.0.0",
+  "description": "",
+  "author": "<github.com/freiny>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node /src/app/server.js"
+  },
+  "dependencies": {
+		"express": "^4.13.3",
+  }
+}

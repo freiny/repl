@@ -1,0 +1,58 @@
+#!/bin/bash
+imagePrefix=vue
+imageId=sv
+
+up(){
+	echo "UP"
+	docker-compose -f ./dev.yml up
+}
+
+clean(){
+	echo "CLEAN"
+	# Stop and Remove Containers, Remove Images
+	docker stop "$imagePrefix"_"$imageId"_1
+	docker rm "$imagePrefix"_"$imageId"_1
+	docker rmi "$imagePrefix"_"$imageId":latest
+	rm -rf node_modules
+}
+
+save(){
+	echo "SAVE"
+	rm "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+	docker-compose --file dev.yml build
+	docker save $imagePrefix"_"$imageId | gzip -1 >  "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+}
+
+load(){
+	echo "LOAD"
+	docker load < "/$DOCKER_IMAGE_PATH/$imagePrefix.tar.gz"
+	up
+}
+
+init(){
+	echo "INIT"
+	clean
+	save
+	clean
+}
+
+case $1 in
+  # ---------------------------------------------------
+	clean)
+		clean
+	;;
+	init)
+		init
+	;;
+	load)
+		load
+	;;
+	save)
+		save
+	;;
+	up)
+		up
+	;;
+  # ---------------------------------------------------
+  *|"")    echo "Run Utility: run <Command> [Arguments...]"
+esac

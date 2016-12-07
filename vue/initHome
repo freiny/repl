@@ -1,0 +1,11 @@
+#!/bin/sh
+mv node_modules /src
+cd /src
+npm install
+printf "\033c"; echo "************************************************"
+node /src/app/server.js &
+while inotifywait --quiet -e modify /src --recursive --exclude "npm-debug.log"; do
+	killall -9 node
+	printf "\033c"; echo "************************************************"
+	node /src/app/server.js &
+done

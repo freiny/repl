@@ -1,0 +1,10 @@
+version: '2'
+services:
+  sv:
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ../vue:/src
+    ports:
+      - 80:80
